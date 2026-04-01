@@ -110,29 +110,6 @@ function tree:remove(c)
     end
 end
 
---- Find the ancestor node that acts as a boundary in a given direction
-function tree:find_fence(node, direction)
-    local current = node
-    while current and current.parent do
-        local p = current.parent
-        if p.split_type == "vertical" then
-            if direction == "west" and p.second_child == current then
-                return p
-            elseif direction == "east" and p.first_child == current then
-                return p
-            end
-        elseif p.split_type == "horizontal" then
-            if direction == "north" and p.second_child == current then
-                return p
-            elseif direction == "south" and p.first_child == current then
-                return p
-            end
-        end
-        current = p
-    end
-    return nil
-end
-
 function tree:get_leaf_nodes(current_node, leaves)
     leaves = leaves or {}
     current_node = current_node or self.root

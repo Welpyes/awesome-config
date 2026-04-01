@@ -28,7 +28,7 @@ local function get_client_under_mouse(exclude)
     return nil
 end
 
--- Support for interactive move and resize
+-- Support for interactive move (drag and drop)
 client.connect_signal("request::geometry", function(c, context, hints)
     if not (c and c.valid and c.first_tag) then return end
     if awful.layout.get(c.screen) ~= bsp then return end
@@ -39,56 +39,6 @@ client.connect_signal("request::geometry", function(c, context, hints)
         if hints.y then c.y = hints.y end
         if hints.width then c.width = hints.width end
         if hints.height then c.height = hints.height end
-    elseif context == "mouse_resize" then
-        local t = c.first_tag
-        local bsp_tree = state.get_tree(t)
-        local node = bsp_tree:find_node_by_client(c)
-        if not node then return end
-
-        local geo = c:geometry()
-        
-        -- Horizontal resizing (West/East)
-        if hints.width or hints.x then
-            local dx = (hints.width or geo.width) - geo.width
-            local dx_x = geo.x - (hints.x or geo.x)
-            
-            -- If x changed, it's a left-edge resize (West)
-            if dx_x ~= 0 then
-                local fence = bsp_tree:find_fence(node, "west")
-                if fence and fence.geometry then
-                    fence.split_ratio = math.max(0.05, math.min(0.95, fence.split_ratio - (dx_x / fence.geometry.width)))
-                end
-            end
-            -- If width changed but x didn't, it's a right-edge resize (East)
-            if dx ~= 0 and dx_x == 0 then
-                local fence = bsp_tree:find_fence(node, "east")
-                if fence and fence.geometry then
-                    fence.split_ratio = math.max(0.05, math.min(0.95, fence.split_ratio + (dx / fence.geometry.width)))
-                end
-            end
-        end
-
-        -- Vertical resizing (North/South)
-        if hints.height or hints.y then
-            local dy = (hints.height or geo.height) - geo.height
-            local dy_y = geo.y - (hints.y or geo.y)
-
-            -- If y changed, it's a top-edge resize (North)
-            if dy_y ~= 0 then
-                local fence = bsp_tree:find_fence(node, "north")
-                if fence and fence.geometry then
-                    fence.split_ratio = math.max(0.05, math.min(0.95, fence.split_ratio - (dy_y / fence.geometry.height)))
-                end
-            end
-            -- If height changed but y didn't, it's a bottom-edge resize (South)
-            if dy ~= 0 and dy_y == 0 then
-                local fence = bsp_tree:find_fence(node, "south")
-                if fence and fence.geometry then
-                    fence.split_ratio = math.max(0.05, math.min(0.95, fence.split_ratio + (dy / fence.geometry.height)))
-                end
-            end
-        end
-        t:emit_signal("property::layout")
     end
 end)
 
@@ -106,6 +56,7 @@ client.connect_signal("button::release", function(c)
             local n1 = bsp_tree:find_node_by_client(c)
             local n2 = bsp_tree:find_node_by_client(target)
             if n1 and n2 then
+                -- Swap clients in the tree
                 n1.client, n2.client = n2.client, n1.client
             end
         end
@@ -113,27 +64,18 @@ client.connect_signal("button::release", function(c)
     end
 end)
 
---- Resize the focused node in a given direction by a delta
-function bsp.resize(direction, delta, c)
+--- Resize the focused node's parent ratio by a delta
+function bsp.resize(delta, c)
     c = c or client.focus
     if not c or not c.first_tag then return end
 
     local t = c.first_tag
     local bsp_tree = state.get_tree(t)
     local node = bsp_tree:find_node_by_client(c)
-    if not node then return end
+    if not node or not node.parent then return end
 
-    local fence = bsp_tree:find_fence(node, direction)
-    if not fence then return end
-
-    -- Adjust the ratio. Some directions need to be inverted because
-    -- increasing the ratio moves the fence "right" or "down".
-    local actual_delta = delta
-    if direction == "west" or direction == "north" then
-        actual_delta = -delta
-    end
-
-    fence.split_ratio = math.max(0.05, math.min(0.95, fence.split_ratio + actual_delta))
+    local parent = node.parent
+    parent.split_ratio = math.max(0.05, math.min(0.95, parent.split_ratio + delta))
     t:emit_signal("property::layout")
 end
 
@@ -152,7 +94,7 @@ function bsp.rotate(c)
     t:emit_signal("property::layout")
 end
 
---- Swap the focused client with another
+--- Swap the focused client with another (manual call)
 function bsp.swap(c1, c2)
     if not c1 or not c2 or c1 == c2 then return end
     if not c1.first_tag or c1.first_tag ~= c2.first_tag then return end
