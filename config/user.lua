@@ -1,4 +1,5 @@
 local awful = require('awful')
+local bsp = require("module.bsp")
 
 -- Specify user preferences for Awesome's behavior.
 return {
@@ -14,6 +15,7 @@ return {
    -- Table of layouts to cover with awful.layout.inc, ORDER MATTERS, the first layout 
    -- in the table is your DEFAULT LAYOUT.
    layouts = {
+      bsp.layout,
       awful.layout.suit.floating,
       awful.layout.suit.tile,
       awful.layout.suit.tile.left,

@@ -1,6 +1,6 @@
 -- This is used later as the default terminal and editor to run.
 local apps = {}
-apps.terminal   = 'xterm'
+apps.terminal   = 'st'
 apps.editor     = os.getenv('EDITOR') or 'vi'
 apps.editor_cmd = apps.terminal .. ' -e ' .. apps.editor
 
