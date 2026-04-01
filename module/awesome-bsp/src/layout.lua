@@ -65,6 +65,15 @@ function layout.arrange(p)
         end
     end
 
+    -- 1.5 Synchronize internal tree slots with the master client list order.
+    -- This allows mouse/keyboard swapping to work by reordering p.clients.
+    local leaves = bsp_tree:get_leaf_nodes()
+    if #leaves == #clients then
+        for i = 1, #leaves do
+            leaves[i].client = clients[i]
+        end
+    end
+
     -- 2. Calculate geometries
     if not bsp_tree.root then return end
 

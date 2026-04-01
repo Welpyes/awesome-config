@@ -110,6 +110,19 @@ function tree:remove(c)
     end
 end
 
+function tree:get_leaf_nodes(current_node, leaves)
+    leaves = leaves or {}
+    current_node = current_node or self.root
+    if not current_node then return leaves end
+    if current_node:is_leaf() then
+        table.insert(leaves, current_node)
+    else
+        self:get_leaf_nodes(current_node.first_child, leaves)
+        self:get_leaf_nodes(current_node.second_child, leaves)
+    end
+    return leaves
+end
+
 function tree:get_clients(current_node, clients)
     clients = clients or {}
     current_node = current_node or self.root
