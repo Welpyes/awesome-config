@@ -9,6 +9,8 @@ local dpi = xresources.apply_dpi
 
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
+local home_path = os.getenv("HOME").. "/"
+local config_path = home_path.. ".config/awesome"
 
 local theme = {}
 
