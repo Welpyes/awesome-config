@@ -6,7 +6,6 @@ local theme_assets = require("beautiful.theme_assets")
 local xresources = require("beautiful.xresources")
 local rnotification = require("ruled.notification")
 local dpi = xresources.apply_dpi
-local bsp = require("module.bsp")
 
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
@@ -14,13 +13,6 @@ local home_path = os.getenv("HOME").. "/"
 local config_path = home_path.. ".config/awesome"
 
 local theme = {}
-
-bsp.setup({
-    padding = 100,             -- Workspace padding
-    presel_color = "#31748f55", -- Ghost box color
-    modkey = "Mod4",            -- Main modifier
-    altkey = "Mod1"             -- Second modifier for focus/swap
-})
 
 theme.font          = "sans 8"
 
@@ -35,8 +27,8 @@ theme.fg_focus      = "#ffffff"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
-theme.useless_gap         = dpi(0)
-theme.border_width        = dpi(1)
+theme.useless_gap         = dpi(10)
+theme.border_width        = dpi(2)
 theme.border_color_normal = "#000000"
 theme.border_color_active = "#535d6c"
 theme.border_color_marked = "#91231c"

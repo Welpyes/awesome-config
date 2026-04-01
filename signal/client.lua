@@ -1,3 +1,5 @@
+local awful = require('awful')
+
 -- Add a titlebar if titlebars_enabled is set to true for the client in `config/rules.lua`.
 client.connect_signal('request::titlebars', function(c)
    -- While this isn't actually in the example configuration, it's the most sane thing to do.
@@ -10,4 +12,11 @@ end)
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal('mouse::enter', function(c)
    c:activate({ context = 'mouse_enter', raise = false })
+end)
+
+-- Make new windows go below the stack instead of becoming the new master.
+client.connect_signal('request::manage', function(c)
+   if not awesome.startup then
+      awful.client.setslave(c)
+   end
 end)
