@@ -18,6 +18,7 @@ function node.new(args)
     self.second_child = args.second_child
     self.split_type = args.split_type or "vertical"
     self.split_ratio = args.split_ratio or 0.5
+    self.geometry = nil -- Last calculated rectangle
     return self
 end
 

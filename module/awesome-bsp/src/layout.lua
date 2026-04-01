@@ -69,6 +69,7 @@ function layout.arrange(p)
     if not bsp_tree.root then return end
 
     local function calculate(node, area)
+        node.geometry = area -- Save for potential "healing" on removal
         if node:is_leaf() then
             if node.client then
                 p.geometries[node.client] = {

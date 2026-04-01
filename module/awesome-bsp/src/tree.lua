@@ -91,6 +91,15 @@ function tree:remove(c)
     local sibling = target:get_sibling()
     local grandparent = parent.parent
 
+    -- Healing logic (similar to bspwm)
+    if not sibling:is_leaf() and parent.geometry then
+        if parent.geometry.width > parent.geometry.height then
+            sibling.split_type = "vertical"
+        else
+            sibling.split_type = "horizontal"
+        end
+    end
+
     sibling.parent = grandparent
     if not grandparent then
         self.root = sibling
