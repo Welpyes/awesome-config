@@ -4,6 +4,7 @@ local mod    = require('binds.mod')
 local modkey = mod.modkey
 
 local apps   = require('config.apps')
+local bsp    = require('module.awesome-bsp')
 
 --- Global key bindings
 awful.keyboard.append_global_keybindings({
@@ -79,6 +80,15 @@ awful.keyboard.append_global_keybindings({
       { description = 'increase the number of columns', group = 'layout' }),
    awful.key({ modkey, mod.ctrl  }, 'l', function() awful.tag.incncol(-1, nil, true) end,
       { description = 'decrease the number of columns', group = 'layout' }),
+   
+   -- BSP layout specific keys.
+   awful.key({ modkey, mod.alt   }, 'r', function() bsp.rotate() end,
+      { description = 'rotate bsp split type', group = 'layout' }),
+   awful.key({ modkey, mod.alt   }, 'l', function() bsp.resize( 0.05) end,
+      { description = 'increase bsp split ratio', group = 'layout' }),
+   awful.key({ modkey, mod.alt   }, 'h', function() bsp.resize(-0.05) end,
+      { description = 'decrease bsp split ratio', group = 'layout' }),
+
    awful.key({ modkey,           }, 'space', function() awful.layout.inc( 1) end,
       { description = 'select next', group = 'layout' }),
    awful.key({ modkey, mod.shift }, 'space', function() awful.layout.inc(-1) end,
