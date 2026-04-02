@@ -64,19 +64,50 @@ client.connect_signal("button::release", function(c)
     end
 end)
 
---- Resize the focused node's parent ratio by a delta
-function bsp.resize(delta, c)
+--- Resize the focused node in a given direction by a delta
+function bsp.resize(direction, delta, c)
     c = c or client.focus
     if not c or not c.first_tag then return end
 
     local t = c.first_tag
     local bsp_tree = state.get_tree(t)
     local node = bsp_tree:find_node_by_client(c)
-    if not node or not node.parent then return end
+    if not node then return end
 
-    local parent = node.parent
-    parent.split_ratio = math.max(0.05, math.min(0.95, parent.split_ratio + delta))
+    local fence = bsp_tree:find_fence(node, direction)
+    if not fence then return end
+
+    -- Adjust the ratio. Some directions need to be inverted because
+    -- increasing the ratio moves the fence "right" or "down".
+    local actual_delta = delta
+    if direction == "west" or direction == "north" then
+        actual_delta = -delta
+    end
+
+    fence.split_ratio = math.max(0.01, math.min(0.99, fence.split_ratio + actual_delta))
     t:emit_signal("property::layout")
+end
+
+--- Enlarge the client by moving all available boundaries outward
+function bsp.enlarge(delta, c)
+    c = c or client.focus
+    if not c then return end
+    delta = delta or 0.05
+    bsp.resize("east",  delta, c)
+    bsp.resize("west",  delta, c)
+    bsp.resize("north", delta, c)
+    bsp.resize("south", delta, c)
+end
+
+--- Shrink the client by moving all available boundaries inward
+function bsp.shrink(delta, c)
+    c = c or client.focus
+    if not c then return end
+    delta = delta or 0.05
+    bsp.resize("east",  -delta, c)
+    bsp.resize("west",  -delta, c)
+    bsp.resize("north", -delta, c)
+    bsp.resize("south", -delta, c)
 end
 
 --- Rotate the split type of the focused node's parent
