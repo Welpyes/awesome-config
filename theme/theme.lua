@@ -93,10 +93,10 @@ theme.titlebar_sticky_button_focus_inactive  = themes_path.."default/titlebar/st
 theme.titlebar_sticky_button_normal_active = themes_path.."default/titlebar/sticky_normal_active.png"
 theme.titlebar_sticky_button_focus_active  = themes_path.."default/titlebar/sticky_focus_active.png"
 
-theme.titlebar_floating_button_normal_inactive = themes_path.."default/titlebar/floating_normal_inactive.png"
-theme.titlebar_floating_button_focus_inactive  = themes_path.."default/titlebar/floating_focus_inactive.png"
-theme.titlebar_floating_button_normal_active = themes_path.."default/titlebar/floating_normal_active.png"
-theme.titlebar_floating_button_focus_active  = themes_path.."default/titlebar/floating_focus_active.png"
+theme.titlebar_floating_button_normal_inactive = config_path.. "buttons/blue.png"
+theme.titlebar_floating_button_focus_inactive  = config_path.. "buttons/blue.png"
+theme.titlebar_floating_button_normal_active = config_path.. "buttons/blue.png"
+theme.titlebar_floating_button_focus_active  = config_path.. "buttons/blue.png"
 
 theme.titlebar_maximized_button_normal_inactive = config_path.. "buttons/blue.png"
 theme.titlebar_maximized_button_focus_inactive  = config_path.. "buttons/blue.png"
