@@ -28,6 +28,10 @@ theme.fg_urgent     = "#575279"
 theme.fg_minimize   = "#575279"
 
 theme.useless_gap         = dpi(10)
+theme.workspace_padding_top    = dpi(0)
+theme.workspace_padding_bottom = dpi(0)
+theme.workspace_padding_left   = dpi(90)
+theme.workspace_padding_right  = dpi(90)
 theme.border_width        = dpi(2)
 theme.border_color_normal = "#eadccf"
 theme.border_color_active = "#8a8a96"

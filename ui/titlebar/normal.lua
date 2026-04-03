@@ -20,7 +20,7 @@ return function(c)
       {
          layout = wibox.layout.fixed.horizontal,
          awful.titlebar.widget.closebutton(c),
-         awful.titlebar.widget.maximizedbutton(c)
+         awful.titlebar.widget.floatingbutton(c)
       },
       -- Middle
       {
