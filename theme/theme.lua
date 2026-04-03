@@ -10,28 +10,28 @@ local dpi = xresources.apply_dpi
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
 local home_path = os.getenv("HOME").. "/"
-local config_path = home_path.. ".config/awesome"
+local config_path = home_path.. ".config/awesome/"
 
 local theme = {}
 
-theme.font          = "sans 8"
+theme.font          = "Ioskeley 8"
 
-theme.bg_normal     = "#222222"
-theme.bg_focus      = "#535d6c"
-theme.bg_urgent     = "#ff0000"
-theme.bg_minimize   = "#444444"
+theme.bg_normal     = "#F2E9DE"
+theme.bg_focus      = "#F2E9DE"
+theme.bg_urgent     = "#F2E9DE"
+theme.bg_minimize   = "#F2E9DE"
 theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal     = "#aaaaaa"
-theme.fg_focus      = "#ffffff"
-theme.fg_urgent     = "#ffffff"
-theme.fg_minimize   = "#ffffff"
+theme.fg_normal     = "#575279"
+theme.fg_focus      = "#575279"
+theme.fg_urgent     = "#575279"
+theme.fg_minimize   = "#575279"
 
 theme.useless_gap         = dpi(10)
 theme.border_width        = dpi(2)
-theme.border_color_normal = "#000000"
-theme.border_color_active = "#535d6c"
-theme.border_color_marked = "#91231c"
+theme.border_color_normal = "#eadccf"
+theme.border_color_active = "#8a8a96"
+theme.border_color_marked = "#8a8a96"
 
 -- There are other variable sets
 -- overriding the default one when
@@ -73,8 +73,8 @@ theme.menu_width  = dpi(100)
 --theme.bg_widget = "#cc0000"
 
 -- Define the image to load
-theme.titlebar_close_button_normal = themes_path.."default/titlebar/close_normal.png"
-theme.titlebar_close_button_focus  = themes_path.."default/titlebar/close_focus.png"
+theme.titlebar_close_button_normal = config_path.. "buttons/red.png"
+theme.titlebar_close_button_focus  = config_path.. "buttons/red.png"
 
 theme.titlebar_minimize_button_normal = themes_path.."default/titlebar/minimize_normal.png"
 theme.titlebar_minimize_button_focus  = themes_path.."default/titlebar/minimize_focus.png"
@@ -94,12 +94,12 @@ theme.titlebar_floating_button_focus_inactive  = themes_path.."default/titlebar/
 theme.titlebar_floating_button_normal_active = themes_path.."default/titlebar/floating_normal_active.png"
 theme.titlebar_floating_button_focus_active  = themes_path.."default/titlebar/floating_focus_active.png"
 
-theme.titlebar_maximized_button_normal_inactive = themes_path.."default/titlebar/maximized_normal_inactive.png"
-theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar/maximized_focus_inactive.png"
-theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
-theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
+theme.titlebar_maximized_button_normal_inactive = config_path.. "buttons/blue.png"
+theme.titlebar_maximized_button_focus_inactive  = config_path.. "buttons/blue.png"
+theme.titlebar_maximized_button_normal_active = config_path.. "buttons/blue.png"
+theme.titlebar_maximized_button_focus_active  = config_path.. "buttons/blue.png"
 
-theme.wallpaper = themes_path.."default/background.png"
+theme.wallpaper = home_path.. "Documents/wallpapers/Mimi.jpg"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
