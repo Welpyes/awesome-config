@@ -1,4 +1,5 @@
 local awful = require('awful')
+local wibox = require('wibox')
 
 local mod    = require('binds.mod')
 local modkey = mod.modkey
@@ -8,6 +9,9 @@ return function(s)
    return awful.widget.taglist({
       screen  = s,
       filter  = awful.widget.taglist.filter.all,
+      layout  = {
+         layout = wibox.layout.fixed.vertical
+      },
       buttons = {
          -- Left-clicking a tag changes to it.
          awful.button(nil, 1, function(t) t:view_only() end),

@@ -81,11 +81,14 @@ function layout.arrange(p)
         node.geometry = area -- Save for potential "healing" on removal
         if node:is_leaf() then
             if node.client then
+                local bw = p.border_width or 0
+                local gap = p.useless_gap or 0
+                
                 p.geometries[node.client] = {
-                    x = area.x,
-                    y = area.y,
-                    width = area.width,
-                    height = area.height
+                    x = area.x + gap,
+                    y = area.y + gap,
+                    width = math.max(1, area.width - gap * 2 - bw * 2),
+                    height = math.max(1, area.height - gap * 2 - bw * 2)
                 }
             end
             return

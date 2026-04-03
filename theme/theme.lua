@@ -27,7 +27,7 @@ theme.fg_focus      = "#575279"
 theme.fg_urgent     = "#575279"
 theme.fg_minimize   = "#575279"
 
-theme.useless_gap         = dpi(10)
+theme.useless_gap         = dpi(4)
 theme.workspace_padding_top    = dpi(0)
 theme.workspace_padding_bottom = dpi(0)
 theme.workspace_padding_left   = dpi(90)

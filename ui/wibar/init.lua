@@ -8,25 +8,25 @@ return function(s)
 
    -- Create the wibox
    s.mywibox = awful.wibar({
-      position = 'top',
+      position = 'left',
+      width    = 40,
       screen   = s,
       widget   = {
-         layout = wibox.layout.align.horizontal,
-         -- Left widgets.
+         layout = wibox.layout.align.vertical,
+         -- Top widgets (was Left)
          {
-            layout = wibox.layout.fixed.horizontal,
+            layout = wibox.layout.fixed.vertical,
             module.launcher(),
-            module.taglist(s),
+            -- module.taglist(s),
             s.mypromptbox
          },
-         -- Middle widgets.
+         -- Middle widgets
          module.tasklist(s),
-         -- Right widgets.
+         -- Bottom widgets (was Right)
          {
-            layout = wibox.layout.fixed.horizontal,
-            awful.widget.keyboardlayout(), -- Keyboard map indicator and switcher.
+            layout = wibox.layout.fixed.vertical,
             wibox.widget.systray(),
-            wibox.widget.textclock(), -- Create a textclock widget.
+            wibox.widget.textclock('%H\n%M'), -- Vertical clock
             module.layoutbox(s)
          }
       }

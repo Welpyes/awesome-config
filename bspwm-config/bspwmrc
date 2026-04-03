@@ -1,0 +1,44 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+display(){
+  bspc monitor -d 1 2 3 4 5
+  xsetroot -cursor_name left_ptr
+}
+
+gaps(){
+  bspc config window_gap 10
+  bspc config top_padding 10
+  bspc config bottom_padding 10
+  bspc config right_padding 100
+  bspc config left_padding 100
+}
+
+clients(){
+  bspc rule -a "Xfce4-taskmanager" state=floating layer=above
+  bspc rule -a "firefox-default" desktop='^2'
+  bspc rule -a scratchpad state=floating
+  bspc config pointer_follows_focus false
+  bspc config focus_follows_pointer true
+  bspc config border_width 2
+  bspc config normal_border_color '#eadccf'
+  bspc config active_border_color '#8a8a96'
+  bspc config focused_border_color '#8a8a96'
+}
+
+autostart(){
+  kill -9 $(pgrep -x "sxhkd") > /dev/null 
+  sxhkd -c ~/.config/bspwm/sxhkdrc &
+  feh --bg-fill /sdcard/Documents/wallpapers/Mimi.jpg &
+  kill -9 $(pgrep -x "eww") > /dev/null
+  dunst &
+  # picom &
+  fastcompmgr -cC -r 1 -o 1 -l 5 -t 5 --shadow-color "#8a8a96"  & # 
+}
+
+__main__(){
+  display
+  gaps
+  clients
+  autostart
+}
+__main__
