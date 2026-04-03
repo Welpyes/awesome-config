@@ -148,16 +148,17 @@ function tree:find_neighbor(node, direction)
     -- Drill down to find the closest leaf in that subtree
     local current = target_subtree
     while not current:is_leaf() do
-        -- Try to stay as close as possible to the original geometry
         if current.split_type == fence.split_type then
-            -- Opposite side of the split to stay near the boundary
+            -- Stay on the boundary
             if direction == "west" or direction == "north" then
                 current = current.second_child
             else
                 current = current.first_child
             end
         else
-            -- If different split, just take the first child for now
+            -- If different split, we need to pick the "closest" child.
+            -- For vertical split neighbor search, picking between top/bottom doesn't 
+            -- strictly matter for "east/west" logic, but we'll try to favor the first.
             current = current.first_child
         end
     end
