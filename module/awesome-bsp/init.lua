@@ -64,6 +64,39 @@ client.connect_signal("button::release", function(c)
     end
 end)
 
+--- Focus a neighbor in a given direction
+function bsp.focus_direction(direction, c)
+    c = c or client.focus
+    if not c or not c.first_tag then return end
+
+    local t = c.first_tag
+    local bsp_tree = state.get_tree(t)
+    local node = bsp_tree:find_node_by_client(c)
+    if not node then return end
+
+    local neighbor = bsp_tree:find_neighbor(node, direction)
+    if neighbor and neighbor.client then
+        neighbor.client:emit_signal("request::activate", "key.focus", {raise = true})
+    end
+end
+
+--- Swap with a neighbor in a given direction
+function bsp.swap_direction(direction, c)
+    c = c or client.focus
+    if not c or not c.first_tag then return end
+
+    local t = c.first_tag
+    local bsp_tree = state.get_tree(t)
+    local node = bsp_tree:find_node_by_client(c)
+    if not node then return end
+
+    local neighbor = bsp_tree:find_neighbor(node, direction)
+    if neighbor and neighbor.client then
+        bsp_tree:swap_node_clients(node, neighbor)
+        t:emit_signal("property::layout")
+    end
+end
+
 --- Resize the focused node in a given direction by a delta
 function bsp.resize(direction, delta, c)
     c = c or client.focus

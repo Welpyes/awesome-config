@@ -58,22 +58,22 @@ awful.keyboard.append_global_keybindings({
    end, { description = 'focus newer', group = 'client' }),
 
    -- Focus/Swap (Directional)
-   awful.key({ altkey,           }, 'h', function() awful.client.focus.bydirection("west") end,
+   awful.key({ altkey,           }, 'h', function() bsp.focus_direction("west") end,
       { description = 'focus west', group = 'client' }),
-   awful.key({ altkey,           }, 'j', function() awful.client.focus.bydirection("south") end,
+   awful.key({ altkey,           }, 'j', function() bsp.focus_direction("south") end,
       { description = 'focus south', group = 'client' }),
-   awful.key({ altkey,           }, 'k', function() awful.client.focus.bydirection("north") end,
+   awful.key({ altkey,           }, 'k', function() bsp.focus_direction("north") end,
       { description = 'focus north', group = 'client' }),
-   awful.key({ altkey,           }, 'l', function() awful.client.focus.bydirection("east") end,
+   awful.key({ altkey,           }, 'l', function() bsp.focus_direction("east") end,
       { description = 'focus east', group = 'client' }),
 
-   awful.key({ altkey, mod.shift }, 'h', function() awful.client.swap.bydirection("west") end,
+   awful.key({ altkey, mod.shift }, 'h', function() bsp.swap_direction("west") end,
       { description = 'swap west', group = 'client' }),
-   awful.key({ altkey, mod.shift }, 'j', function() awful.client.swap.bydirection("south") end,
+   awful.key({ altkey, mod.shift }, 'j', function() bsp.swap_direction("south") end,
       { description = 'swap south', group = 'client' }),
-   awful.key({ altkey, mod.shift }, 'k', function() awful.client.swap.bydirection("north") end,
+   awful.key({ altkey, mod.shift }, 'k', function() bsp.swap_direction("north") end,
       { description = 'swap north', group = 'client' }),
-   awful.key({ altkey, mod.shift }, 'l', function() awful.client.swap.bydirection("east") end,
+   awful.key({ altkey, mod.shift }, 'l', function() bsp.swap_direction("east") end,
       { description = 'swap east', group = 'client' }),
 
    -- Tag related (Super + 1-9)
