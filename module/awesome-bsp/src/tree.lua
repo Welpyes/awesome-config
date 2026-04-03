@@ -133,6 +133,42 @@ function tree:find_fence(node, direction)
     return nil
 end
 
+--- Find the leaf node in a given direction from the current node
+function tree:find_neighbor(node, direction)
+    local fence = self:find_fence(node, direction)
+    if not fence then return nil end
+
+    local target_subtree
+    if direction == "west" or direction == "north" then
+        target_subtree = fence.first_child
+    else
+        target_subtree = fence.second_child
+    end
+
+    -- Drill down to find the closest leaf in that subtree
+    local current = target_subtree
+    while not current:is_leaf() do
+        -- Try to stay as close as possible to the original geometry
+        if current.split_type == fence.split_type then
+            -- Opposite side of the split to stay near the boundary
+            if direction == "west" or direction == "north" then
+                current = current.second_child
+            else
+                current = current.first_child
+            end
+        else
+            -- If different split, just take the first child for now
+            current = current.first_child
+        end
+    end
+    return current
+end
+
+function tree:swap_node_clients(node1, node2)
+    if not (node1 and node2) then return end
+    node1.client, node2.client = node2.client, node1.client
+end
+
 function tree:get_leaf_nodes(current_node, leaves)
     leaves = leaves or {}
     current_node = current_node or self.root

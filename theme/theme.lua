@@ -14,7 +14,7 @@ local config_path = home_path.. ".config/awesome/"
 
 local theme = {}
 
-theme.font          = "Ioskeley 8"
+theme.font          = "Ioskeley Mono 8"
 
 theme.bg_normal     = "#F2E9DE"
 theme.bg_focus      = "#F2E9DE"
@@ -118,19 +118,39 @@ theme.layout_tile = themes_path.."default/layouts/tilew.png"
 theme.layout_tiletop = themes_path.."default/layouts/tiletopw.png"
 theme.layout_spiral  = themes_path.."default/layouts/spiralw.png"
 theme.layout_dwindle = themes_path.."default/layouts/dwindlew.png"
+theme.layout_bsp     = themes_path.."default/layouts/dwindlew.png"
 theme.layout_cornernw = themes_path.."default/layouts/cornernww.png"
 theme.layout_cornerne = themes_path.."default/layouts/cornernew.png"
 theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
 theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
 
 -- Generate Awesome icon:
-theme.awesome_icon = theme_assets.awesome_icon(
-    theme.menu_height, theme.bg_focus, theme.fg_focus
-)
+theme.awesome_icon = config_path.. "buttons/home-button.png"
 
 -- Define the icon theme for application icons. If not set then the icons
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
 theme.icon_theme = nil
+
+-- Wibar Module Colors
+theme.wibar_bg = "#F2E9DE"
+theme.wibar_fg = "#575279"
+
+theme.launcher_bg = "#eb6f92"
+theme.launcher_fg = "#F2E9DE"
+
+theme.tasklist_bg_normal = "#f6c177"
+theme.tasklist_fg_normal = "#575279"
+theme.tasklist_bg_focus  = "#ea9d34"
+theme.tasklist_fg_focus  = "#F2E9DE"
+
+theme.clock_bg = "#56949f"
+theme.clock_fg = "#F2E9DE"
+theme.clock_font = "Ioskeley Mono 18"
+
+theme.layoutbox_bg = "#907aa9"
+theme.layoutbox_fg = "#F2E9DE"
+
+theme.systray_bg = theme.bg_normal
 
 -- Set different colors for urgent notifications.
 rnotification.connect_signal('request::rules', function()

@@ -2,105 +2,81 @@ local awful = require('awful')
 
 local mod    = require('binds.mod')
 local modkey = mod.modkey
+local altkey = mod.alt
 
 local apps   = require('config.apps')
 local bsp    = require('module.awesome-bsp')
 
 --- Global key bindings
 awful.keyboard.append_global_keybindings({
-   -- General Awesome keys.
-   awful.key({ modkey,           }, 's', require('awful.hotkeys_popup').show_help,
-      { description = 'show help', group = 'awesome' }),
-   awful.key({ modkey,           }, 'w', function() require('ui.menu').main:show() end,
-      { description = 'show main menu', group = 'awesome' }),
-   awful.key({ modkey, mod.ctrl  }, 'r', awesome.restart,
-      { description = 'reload awesome', group = 'awesome' }),
-   awful.key({ modkey, mod.shift }, 'q', awesome.quit,
-      { description = 'quit awesome', group = 'awesome' }),
-   awful.key({ modkey            }, 'x', function() awful.prompt.run({
-      prompt       = 'Run Lua code: ',
-      textbox      = awful.screen.focused().mypromptbox.widget,
-      exe_callback = awful.util.eval,
-      history_path = awful.util.get_cache_dir() .. '/history_eval' })
-      end, { description = 'lua execute prompt', group = 'awesome' }),
-   awful.key({ modkey,           }, 'Return', function() awful.spawn(apps.terminal) end,
+   -- Applications (ported from sxhkdrc)
+   awful.key({ altkey, mod.shift }, 'c', function() awful.spawn.with_shell("eww open --toggle simple-calendar") end,
+      { description = 'calendar', group = 'launcher' }),
+   awful.key({ altkey, mod.shift }, 'n', function() awful.spawn.with_shell("eww open --toggle notification-center") end,
+      { description = 'notification center', group = 'launcher' }),
+   awful.key({ altkey,           }, 'Return', function() awful.spawn(apps.terminal) end,
       { description = 'open a terminal', group = 'launcher' }),
-   awful.key({ modkey            }, 'r', function() awful.screen.focused().mypromptbox:run() end,
-      { description = 'run prompt', group = 'launcher' }),
-   awful.key({ modkey            }, 'p', function() require('menubar').show() end,
-      { description = 'show the menubar', group = 'launcher' }),
+   awful.key({ altkey,           }, 'x', awesome.restart,
+      { description = 'reload awesome', group = 'awesome' }),
+   awful.key({ altkey, mod.shift }, 'p', function() awful.spawn.with_shell("pkill -USR1 -x picom") end,
+      { description = 'reload picom', group = 'awesome' }),
+   awful.key({ altkey,           }, 'e', function() awful.spawn(apps.terminal .. " -e yazi") end,
+      { description = 'terminal file manager', group = 'launcher' }),
+   awful.key({ altkey, mod.shift }, 'e', function() awful.spawn("caja") end,
+      { description = 'gui file manager', group = 'launcher' }),
+   awful.key({ altkey,           }, 'space', function() awful.spawn.with_shell("rofi -show drun -theme ~/.config/rofi/dmenu.rasi") end,
+      { description = 'app launcher', group = 'launcher' }),
+   awful.key({ altkey,           }, 'Tab', function() awful.spawn.with_shell("rofi -show window -theme ~/.config/rofi/dmenu.rasi") end,
+      { description = 'window switcher', group = 'launcher' }),
+   awful.key({ altkey,           }, 'r', function() awful.spawn.with_shell("rofi -show run -theme ~/.config/rofi/dmenu.rasi") end,
+      { description = 'rofi run', group = 'launcher' }),
+   awful.key({ altkey, mod.shift }, 's', function() awful.spawn.with_shell("scrot -Z 2 -d 1 -f '%Y-%m-%d_%H-%M-%S_scrot.png' -e 'mv $f ~/Pictures/Screenshots/'") end,
+      { description = 'screenshot', group = 'launcher' }),
 
-   -- Tags related keybindings.
-   awful.key({ modkey,           }, 'Left', awful.tag.viewprev,
-      { description = 'view previous', group = 'tag' }),
-   awful.key({ modkey,           }, 'Right', awful.tag.viewnext,
-      { description = 'view next', group = 'tag' }),
-   awful.key({ modkey,           }, 'Escape', awful.tag.history.restore,
-      { description = 'go back', group = 'tag' }),
+   -- WM Control
+   awful.key({ altkey, mod.shift }, 'q', awesome.quit,
+      { description = 'quit awesome', group = 'awesome' }),
+   awful.key({ altkey, mod.shift }, 'r', awesome.restart,
+      { description = 'reload awesome', group = 'awesome' }),
+   awful.key({ altkey, mod.shift }, 'm', function() awful.layout.inc(1) end,
+      { description = 'next layout', group = 'layout' }),
 
-   -- Focus related keybindings.
-   awful.key({ modkey,           }, 'j', function() awful.client.focus.byidx( 1) end,
-      { description = 'focus next by index', group = 'client' }),
-   awful.key({ modkey,           }, 'k', function() awful.client.focus.byidx(-1) end,
-      { description = 'focus previous by index', group = 'client'}),
-   awful.key({ modkey,           }, 'Tab', function()
+   -- Tag Navigation (alt + brackets)
+   awful.key({ altkey,           }, '[', awful.tag.viewprev,
+      { description = 'view previous tag', group = 'tag' }),
+   awful.key({ altkey,           }, ']', awful.tag.viewnext,
+      { description = 'view next tag', group = 'tag' }),
+
+   -- Focus History (super + o/i)
+   awful.key({ modkey,           }, 'o', function()
       awful.client.focus.history.previous()
-      if client.focus then
-         client.focus:raise()
-      end
-      end, { description = 'go back', group = 'client' }),
-   awful.key({ modkey, mod.ctrl }, 'j', function() awful.screen.focus_relative( 1) end,
-      { description = 'focus the next screen', group = 'screen' }),
-   awful.key({ modkey, mod.ctrl }, 'k', function() awful.screen.focus_relative(-1) end,
-      { description = 'focus the previous screen', group = 'screen' }),
-   awful.key({ modkey, mod.ctrl }, 'n', function()
-      local c = awful.client.restore()
-      -- Focus restored client
-      if c then
-         c:activate { raise = true, context = 'key.unminimize' }
-      end
-      end, { description = 'restore minimized', group = 'client' }),
+      if client.focus then client.focus:raise() end
+   end, { description = 'focus older', group = 'client' }),
+   awful.key({ modkey,           }, 'i', function()
+      -- Awesome doesn't have a "newer" focus history natively like bspwm,
+      -- but we can use the default focus behavior as a proxy or just keep 'o'.
+   end, { description = 'focus newer', group = 'client' }),
 
-   -- Layout related keybindings.
-   awful.key({ modkey, mod.shift }, 'j', function() awful.client.swap.byidx( 1) end,
-      { description = 'swap with next client by index', group = 'client' }),
-   awful.key({ modkey, mod.shift }, 'k', function() awful.client.swap.byidx(-1) end,
-      { description = 'swap with previous client by index', group = 'client' }),
-   awful.key({ modkey,           }, 'u', awful.client.urgent.jumpto,
-      { description = 'jump to urgent client', group = 'client' }),
-   awful.key({ modkey,           }, 'l', function() awful.tag.incmwfact( 0.05) end,
-      { description = 'increase master width factor', group = 'layout' }),
-   awful.key({ modkey,           }, 'h', function() awful.tag.incmwfact(-0.05) end,
-      { description = 'decrease master width factor', group = 'layout' }),
-   awful.key({ modkey, mod.shift }, 'h', function() awful.tag.incnmaster( 1, nil, true) end,
-      { description = 'increase the number of master clients', group = 'layout' }),
-   awful.key({ modkey, mod.shift }, 'l', function() awful.tag.incnmaster(-1, nil, true) end,
-      { description = 'decrease the number of master clients', group = 'layout' }),
-   awful.key({ modkey, mod.ctrl  }, 'h', function() awful.tag.incncol( 1, nil, true) end,
-      { description = 'increase the number of columns', group = 'layout' }),
-   awful.key({ modkey, mod.ctrl  }, 'l', function() awful.tag.incncol(-1, nil, true) end,
-      { description = 'decrease the number of columns', group = 'layout' }),
-   
-   -- BSP layout specific keys.
-   awful.key({ modkey, mod.alt   }, 'r', function() bsp.rotate() end,
-      { description = 'rotate bsp split type', group = 'layout' }),
-   awful.key({ modkey, mod.alt   }, 'l', function() bsp.resize('east',  0.05) end,
-      { description = 'resize bsp east', group = 'layout' }),
-   awful.key({ modkey, mod.alt   }, 'h', function() bsp.resize('west',  0.05) end,
-      { description = 'resize bsp west', group = 'layout' }),
-   awful.key({ modkey, mod.alt   }, 'j', function() bsp.resize('south', 0.05) end,
-      { description = 'resize bsp south', group = 'layout' }),
-   awful.key({ modkey, mod.alt   }, 'k', function() bsp.resize('north', 0.05) end,
-      { description = 'resize bsp north', group = 'layout' }),
-   awful.key({ modkey, mod.alt   }, 'i', function() bsp.enlarge(0.05) end,
-      { description = 'enlarge bsp client', group = 'layout' }),
-   awful.key({ modkey, mod.alt   }, 'o', function() bsp.shrink(0.05) end,
-      { description = 'shrink bsp client', group = 'layout' }),
+   -- Focus/Swap (Directional)
+   awful.key({ altkey,           }, 'h', function() awful.client.focus.bydirection("west") end,
+      { description = 'focus west', group = 'client' }),
+   awful.key({ altkey,           }, 'j', function() awful.client.focus.bydirection("south") end,
+      { description = 'focus south', group = 'client' }),
+   awful.key({ altkey,           }, 'k', function() awful.client.focus.bydirection("north") end,
+      { description = 'focus north', group = 'client' }),
+   awful.key({ altkey,           }, 'l', function() awful.client.focus.bydirection("east") end,
+      { description = 'focus east', group = 'client' }),
 
-   awful.key({ modkey,           }, 'space', function() awful.layout.inc( 1) end,
-      { description = 'select next', group = 'layout' }),
-   awful.key({ modkey, mod.shift }, 'space', function() awful.layout.inc(-1) end,
-      { description = 'select previous', group = 'layout' }),
+   awful.key({ altkey, mod.shift }, 'h', function() awful.client.swap.bydirection("west") end,
+      { description = 'swap west', group = 'client' }),
+   awful.key({ altkey, mod.shift }, 'j', function() awful.client.swap.bydirection("south") end,
+      { description = 'swap south', group = 'client' }),
+   awful.key({ altkey, mod.shift }, 'k', function() awful.client.swap.bydirection("north") end,
+      { description = 'swap north', group = 'client' }),
+   awful.key({ altkey, mod.shift }, 'l', function() awful.client.swap.bydirection("east") end,
+      { description = 'swap east', group = 'client' }),
+
+   -- Tag related (Super + 1-9)
    awful.key({
       modifiers   = { modkey },
       keygroup    = 'numrow',
@@ -109,16 +85,6 @@ awful.keyboard.append_global_keybindings({
       on_press    = function(index)
          local tag = awful.screen.focused().tags[index]
          if tag then tag:view_only() end
-      end
-   }),
-   awful.key({
-      modifiers   = { modkey, mod.ctrl },
-      keygroup    = 'numrow',
-      description = 'toggle tag',
-      group       = 'tag',
-      on_press    = function(index)
-         local tag = awful.screen.focused().tags[index]
-         if tag then awful.tag.viewtoggle(tag) end
       end
    }),
    awful.key({
@@ -133,28 +99,33 @@ awful.keyboard.append_global_keybindings({
          end
       end
    }),
-   awful.key({
-      modifiers   = { modkey, mod.ctrl, mod.shift },
-      keygroup    = 'numrow',
-      description = 'toggle focused client on tag',
-      group       = 'tag',
-      on_press    = function(index)
-         if client.focus then
-            local tag = client.focus.screen.tags[index]
-            if tag then client.focus:toggle_tag(tag) end
-         end
-      end
-   }),
-   awful.key({
-      modifiers   = { modkey },
-      keygroup    = 'numpad',
-      description = 'select layout directly',
-      group       = 'layout',
-      on_press    = function(index)
-         local t = awful.screen.focused().selected_tag
-         if t then
-            t.layout = t.layouts[index] or t.layout
-         end
-      end
-   })
+
+   -- Resize (BSP style from sxhkdrc)
+   -- Expand outward
+   awful.key({ mod.ctrl,           }, 'h', function() bsp.resize('west',  0.05) end,
+      { description = 'resize west outward', group = 'layout' }),
+   awful.key({ mod.ctrl,           }, 'j', function() bsp.resize('south', 0.05) end,
+      { description = 'resize south outward', group = 'layout' }),
+   awful.key({ mod.ctrl,           }, 'k', function() bsp.resize('north', 0.05) end,
+      { description = 'resize north outward', group = 'layout' }),
+   awful.key({ mod.ctrl,           }, 'l', function() bsp.resize('east',  0.05) end,
+      { description = 'resize east outward', group = 'layout' }),
+
+   -- Contract inward
+   awful.key({ mod.ctrl, altkey    }, 'h', function() bsp.resize('east',  -0.05) end,
+      { description = 'resize east inward', group = 'layout' }),
+   awful.key({ mod.ctrl, altkey    }, 'j', function() bsp.resize('north', -0.05) end,
+      { description = 'resize north inward', group = 'layout' }),
+   awful.key({ mod.ctrl, altkey    }, 'k', function() bsp.resize('south', -0.05) end,
+      { description = 'resize south inward', group = 'layout' }),
+   awful.key({ mod.ctrl, altkey    }, 'l', function() bsp.resize('west',  -0.05) end,
+      { description = 'resize west inward', group = 'layout' }),
+
+   -- BSP Rotate
+   awful.key({ altkey, mod.ctrl    }, 'r', function() bsp.rotate() end,
+      { description = 'rotate bsp split', group = 'layout' }),
+   
+   -- Standard Awesome keys preserved
+   awful.key({ modkey,           }, 's', require('awful.hotkeys_popup').show_help,
+      { description = 'show help', group = 'awesome' })
 })

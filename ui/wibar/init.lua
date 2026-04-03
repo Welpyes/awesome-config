@@ -1,5 +1,6 @@
 local awful = require('awful')
 local wibox = require('wibox')
+local beautiful = require('beautiful')
 
 local module = require(... .. '.module')
 
@@ -11,23 +12,51 @@ return function(s)
       position = 'left',
       width    = 40,
       screen   = s,
+      bg       = beautiful.wibar_bg,
+      fg       = beautiful.wibar_fg,
       widget   = {
          layout = wibox.layout.align.vertical,
-         -- Top widgets (was Left)
+         -- Top widgets
          {
             layout = wibox.layout.fixed.vertical,
-            module.launcher(),
-            -- module.taglist(s),
+            {
+               module.launcher(),
+               bg     = beautiful.launcher_bg,
+               fg     = beautiful.launcher_fg,
+               widget = wibox.container.background,
+            },
             s.mypromptbox
          },
          -- Middle widgets
          module.tasklist(s),
-         -- Bottom widgets (was Right)
+         -- Bottom widgets
          {
             layout = wibox.layout.fixed.vertical,
             wibox.widget.systray(),
-            wibox.widget.textclock('%H\n%M'), -- Vertical clock
-            module.layoutbox(s)
+            {
+               {
+                  {
+                     format = '%H\n%M',
+                     font   = beautiful.clock_font,
+                     widget = wibox.widget.textclock
+                  },
+                  margins = 5,
+                  widget  = wibox.container.margin,
+               },
+               bg     = beautiful.clock_bg,
+               fg     = beautiful.clock_fg,
+               widget = wibox.container.background,
+            },
+            {
+               {
+                  module.layoutbox(s),
+                  margins = 8,
+                  widget  = wibox.container.margin,
+               },
+               bg     = beautiful.layoutbox_bg,
+               fg     = beautiful.layoutbox_fg,
+               widget = wibox.container.background,
+            }
          }
       }
    })
